@@ -11,8 +11,8 @@ gulp.task('build', function(done){
 gulp.task('test', function(done){
   return gulp.src('./specs/**/*.spec.js', {read: false})
     .pipe(debug())
-		// gulp-mocha needs filepaths so you can't have any plugins before it 
-		.pipe(mocha());
+    // gulp-mocha needs filepaths so you can't have any plugins before it 
+    .pipe(mocha());
 });
 
 gulp.task('default', ['build', 'test']);
