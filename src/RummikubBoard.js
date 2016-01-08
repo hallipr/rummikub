@@ -1,22 +1,32 @@
 'use strict';
 
-exports.createBoard = function() {
-  return { tiles: [] };
-};
-
-exports.testBoard = function(board) { 
-  let sets = extractSets(board);
-  
-  for(let set of sets) {
-    if(!testSet(set))
-      return false;
+class RummikubBoard {
+  constructor() {
+    this.tiles = [];
+    this.players = [];
+    this.remainingTiles = getAllTiles();
   }
   
-  return true;
-};
+  testChanges(player, tiles) {
+    let sets = extractSets(tiles);
+  
+    for(let set of sets) {
+      if(!testSet(set))
+        return { valid: false };
+    }
 
-function extractSets(board) {
-  let rows = board.tiles.reduce((result, tile) => {
+    return { valid: true };
+  }
+  
+  applyChanges(player, tiles) {    
+    this.tiles = tiles; 
+  }
+}
+
+module.exports = RummikubBoard;
+
+function extractSets(tiles) {
+  let rows = tiles.reduce((result, tile) => {
     var row = result[tile.y] || (result[tile.y] = []);
     
     row[tile.x] = tile;
@@ -76,4 +86,17 @@ function testSet(set) {
 
   return (singleValue && colorCount === set.length) ||
     (sequential && colorCount === 1);
+}
+
+function getAllTiles() {
+  var tiles = [];
+  
+  ['r','y','b','k'].forEach(color => {
+    [1,2,3,4,5,6,7,8,9,10,11,12,13].forEach(value => {
+      tiles.push({ color: color, value: value, instance: 0 });
+      tiles.push({ color: color, value: value, instance: 1 });
+    });
+  });
+  
+  return tiles;
 }
