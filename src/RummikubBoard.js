@@ -1,25 +1,32 @@
 'use strict';
 
+let BoardChangeError = require("./BoardChangeError");
+let utils = require("./utils");
+
 class RummikubBoard {
   constructor() {
-    this.tiles = [];
     this.players = [];
     this.remainingTiles = getAllTiles();
+    this.playedTiles = [];
   }
-  
+
   testChanges(player, tiles) {
     let sets = extractSets(tiles);
-  
-    for(let set of sets) {
-      if(!testSet(set))
+
+    for (let set of sets) {
+      if (!testSet(set))
         return { valid: false };
     }
 
     return { valid: true };
   }
-  
-  applyChanges(player, tiles) {    
-    this.tiles = tiles; 
+
+  applyChanges(player, tiles) {
+    var testResults = this.testChanges(player, tiles);
+    if (!testResults.valid) {
+      throw new BoardChangeError(testResults)
+    }
+    this.tiles = tiles;
   }
 }
 
@@ -28,75 +35,104 @@ module.exports = RummikubBoard;
 function extractSets(tiles) {
   let rows = tiles.reduce((result, tile) => {
     var row = result[tile.y] || (result[tile.y] = []);
-    
+
     row[tile.x] = tile;
-    
+
     return result;
   }, []);
-  
+
   let sets = rows.reduce((result, row) => {
     let set = null;
-    
+
     row.forEach(tile => {
-        if(set && set[set.length - 1].x != tile.x - 1) {
+      if (set && set[set.length - 1].x != tile.x - 1) {
         result.push(set);
         set = null;
       }
-      
-      if(!set)
+
+      if (!set)
         set = [];
-        
-      set.push(tile);     
+
+      set.push(tile);
     });
-    
-    if(set)
+
+    if (set)
       result.push(set);
-      
+
     return result;
   }, []);
-    
+
   return sets;
 }
 
 function testSet(set) {
-  if(set.length < 3){
+  if (set.length < 3) {
     return false;
   }
-  
+
   let singleValue = true;
-  let sequential = true;  
+  let sequential = true;
   let setColors = {};
-  let prevValue = null;
-  
-  set.forEach(tile => {
-    if(prevValue != null) {
-      if(singleValue && prevValue !== tile.value)
+  let previousNonJoker = null;
+  let precedingJokers = 0;
+  let nonJokerCount = 0;
+
+  for(let tile of set) {
+    // if we've seen a non joker, test single value and sequential
+    if (previousNonJoker != null) {
+      if (singleValue && previousNonJoker !== tile.value)
         singleValue = false;
-        
-      if(sequential && prevValue !== tile.value - 1)
+      
+      // the distance between the values of sequential tiles is increased by 1 by each preceeding joker
+      if (sequential && previousNonJoker !== tile.value - 1 - precedingJokers)
         sequential = false;
     }
     
-    setColors[tile.color] = (setColors[tile.color] || 0) + 1;
-    
-    prevValue = tile.value;
-  });
-  
-  var colorCount = Object.keys(setColors).length;  
+    if(tile.number == "Joker") {
+        precedingJokers += 1;
+    } else {
+        previousNonJoker = tile.value;
+        precedingJokers = 0;
+        nonJokerCount += 1;
+        setColors[tile.color] = (setColors[tile.color] || 0) + 1;
+    }
+  }
 
-  return (singleValue && colorCount === set.length) ||
+  var colorCount = Object.keys(setColors).length;
+
+  return (singleValue && colorCount === nonJokerCount) ||
     (sequential && colorCount === 1);
 }
 
 function getAllTiles() {
-  var tiles = [];
+  var colors = ['Red', 'Black', 'Yellow', 'Blue'];
+  var tiles = flatten(range(1,14).map(n => 
+    flatten(range(0,2).map(i => 
+      range(0,4).map(c => { 
+        return { 
+          "id": utils.getTileId(c, n, i), 
+          "color": colors[c],
+          "number": n === 14 ? "Joker" : n, 
+          "instance": i
+        };
+      })
+    ))
+  ));
   
-  ['r','y','b','k'].forEach(color => {
-    [1,2,3,4,5,6,7,8,9,10,11,12,13].forEach(value => {
-      tiles.push({ color: color, value: value, instance: 0 });
-      tiles.push({ color: color, value: value, instance: 1 });
-    });
-  });
+  return tiles.slice(0, 106);
+}
+
+function range(start, count, inc) {
+  inc = inc || 1;
+  var items = [];
   
-  return tiles;
+  for (let i = 0, next = start; i < count; i++ , next += inc) {
+    items.push(next);
+  }
+  
+  return items;
+}
+
+function flatten(arrays) {
+  return [].concat.apply([], arrays);
 }
