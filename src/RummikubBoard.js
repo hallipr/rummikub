@@ -78,24 +78,29 @@ function testSet(set) {
   let nonJokerCount = 0;
 
   for(let tile of set) {
+    let color = utils.colors[tile.id % 4];
+    let instance = tile.id / 4 % 2;
+    let value = Math.floor(tile.id / 8) + 1;
+ 
+    if(value === 14) { //Joker
+        precedingJokers += 1;
+        continue;
+    } 
+    
     // if we've seen a non joker, test single value and sequential
     if (previousNonJoker != null) {
-      if (singleValue && previousNonJoker !== tile.value)
+      if (singleValue && previousNonJoker !== value)
         singleValue = false;
       
       // the distance between the values of sequential tiles is increased by 1 by each preceeding joker
-      if (sequential && previousNonJoker !== tile.value - 1 - precedingJokers)
+      if (sequential && previousNonJoker !== value - 1 - precedingJokers)
         sequential = false;
     }
     
-    if(tile.number == "Joker") {
-        precedingJokers += 1;
-    } else {
-        previousNonJoker = tile.value;
-        precedingJokers = 0;
-        nonJokerCount += 1;
-        setColors[tile.color] = (setColors[tile.color] || 0) + 1;
-    }
+    previousNonJoker = value;
+    precedingJokers = 0;
+    nonJokerCount += 1;
+    setColors[color] = (setColors[color] || 0) + 1;   
   }
 
   var colorCount = Object.keys(setColors).length;
@@ -105,17 +110,9 @@ function testSet(set) {
 }
 
 function getAllTiles() {
-  var colors = ['Red', 'Black', 'Yellow', 'Blue'];
-  var tiles = flatten(range(1,14).map(n => 
+  var tiles = flatten(range(1,14).map(v => 
     flatten(range(0,2).map(i => 
-      range(0,4).map(c => { 
-        return { 
-          "id": utils.getTileId(c, n, i), 
-          "color": colors[c],
-          "number": n === 14 ? "Joker" : n, 
-          "instance": i
-        };
-      })
+      range(0,4).map(c => utils.getTileId(c, v, i))
     ))
   ));
   

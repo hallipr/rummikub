@@ -5,6 +5,7 @@ let RummikubBoard = require('../../src/RummikubBoard');
 let utils = require('../../src/utils.js');
 let chai = require('chai');
 let expect = chai.expect;
+let joker = 14;
 
 describe('RummikubBoard', () => {
   describe('testChanges', () => {
@@ -12,10 +13,10 @@ describe('RummikubBoard', () => {
       var board = new RummikubBoard();
       
       board.playedTiles = [
-        { x: 0, y: 0, id: utils.getTileId("Red", 1, 1) },
-        { x: 1, y: 0, id: utils.getTileId("Red", 2, 1) },
-        { x: 2, y: 0, id: utils.getTileId("Red", 3, 1) },
-        { x: 3, y: 0, id: utils.getTileId("Red", 4, 1) }
+        { x: 0, y: 0, id: utils.getTileId("Red", 1, 0) },
+        { x: 1, y: 0, id: utils.getTileId("Red", 2, 0) },
+        { x: 2, y: 0, id: utils.getTileId("Red", 3, 0) },
+        { x: 3, y: 0, id: utils.getTileId("Red", 4, 0) }
       ];
       
       var tiles = board.playedTiles;
@@ -28,19 +29,19 @@ describe('RummikubBoard', () => {
       var board = new RummikubBoard();
       
       var tiles = [
-        { x: 0, y: 0, id: utils.getTileId("Red", 1, 1) },
-        { x: 1, y: 0, id: utils.getTileId("Red", 2, 1) },
-        { x: 2, y: 0, id: utils.getTileId("Red", 3, 1) },
-        { x: 3, y: 0, id: utils.getTileId("Red", 4, 1) },
-        { x: 4, y: 0, id: utils.getTileId("Red", 5, 1) },
-        { x: 5, y: 0, id: utils.getTileId("Red", 6, 1) },
-        { x: 8, y: 0, id: utils.getTileId("Black", 1, 1) },
-        { x: 9, y: 0, id: utils.getTileId("Red", 1, 2) },
-        { x: 10, y: 0, id: utils.getTileId("Blue", 1, 1) },
-        { x: 11, y: 0, id: utils.getTileId("Yellow", 1, 1) },
-        { x: 4, y: 2, id: utils.getTileId("Blue", 11, 1) },
-        { x: 5, y: 2, id: utils.getTileId("Blue", 12, 1) },
-        { x: 6, y: 2, id: utils.getTileId("Blue", 13, 1) }
+        { x: 0, y: 0, id: utils.getTileId("Red", 1, 0) },
+        { x: 1, y: 0, id: utils.getTileId("Red", 2, 0) },
+        { x: 2, y: 0, id: utils.getTileId("Red", 3, 0) },
+        { x: 3, y: 0, id: utils.getTileId("Red", 4, 0) },
+        { x: 4, y: 0, id: utils.getTileId("Red", 5, 0) },
+        { x: 5, y: 0, id: utils.getTileId("Red", 6, 0) },
+        { x: 8, y: 0, id: utils.getTileId("Black", 1, 0) },
+        { x: 9, y: 0, id: utils.getTileId("Red", 1, 1) },
+        { x: 10, y: 0, id: utils.getTileId("Blue", 1, 0) },
+        { x: 11, y: 0, id: utils.getTileId("Yellow", 1, 0) },
+        { x: 4, y: 2, id: utils.getTileId("Blue", 11, 0) },
+        { x: 5, y: 2, id: utils.getTileId("Blue", 12, 0) },
+        { x: 6, y: 2, id: utils.getTileId("Blue", 13, 0) }
       ];  
       
       var result = board.testChanges({}, tiles);
@@ -52,20 +53,20 @@ describe('RummikubBoard', () => {
       var board = new RummikubBoard();
       
       var tiles = [
-        { x: 0, y: 0, id: utils.getTileId("Red", 1, 1) },
-        { x: 1, y: 0, id: utils.getTileId("Red", 2, 1) },
-        { x: 2, y: 0, id: utils.getTileId("Red", 3, 1) },
-        { x: 3, y: 0, id: utils.getTileId("Black", "Joker", 1) },
-        { x: 4, y: 0, id: utils.getTileId("Red", 5, 1) },
-        { x: 5, y: 0, id: utils.getTileId("Red", 6, 1) },
+        { x: 0, y: 0, id: utils.getTileId("Red", 1, 0) },
+        { x: 1, y: 0, id: utils.getTileId("Red", 2, 0) },
+        { x: 2, y: 0, id: utils.getTileId("Red", 3, 0) },
+        { x: 3, y: 0, id: utils.getTileId("Black", joker, 0) },
+        { x: 4, y: 0, id: utils.getTileId("Red", 5, 0) },
+        { x: 5, y: 0, id: utils.getTileId("Red", 6, 0) },
         
-        { x: 8, y: 0, id: utils.getTileId("Black", 1, 1) },
-        { x: 9, y: 0, id: utils.getTileId("Red", 1, 2) },
-        { x: 10, y: 0, id: utils.getTileId("Red", "Joker", 1) },
+        { x: 8, y: 0, id: utils.getTileId("Black", 1, 0) },
+        { x: 9, y: 0, id: utils.getTileId("Red", 1, 1) },
+        { x: 10, y: 0, id: utils.getTileId("Red", joker, 0) },
         
-        { x: 4, y: 2, id: utils.getTileId("Blue", 11, 1) },
-        { x: 5, y: 2, id: utils.getTileId("Blue", 12, 1) },
-        { x: 6, y: 2, id: utils.getTileId("Blue", 13, 1) }
+        { x: 4, y: 2, id: utils.getTileId("Blue", 11, 0) },
+        { x: 5, y: 2, id: utils.getTileId("Blue", 12, 0) },
+        { x: 6, y: 2, id: utils.getTileId("Blue", 13, 0) }
       ];  
       
       var result = board.testChanges({}, tiles);
@@ -76,7 +77,7 @@ describe('RummikubBoard', () => {
       var board = new RummikubBoard();
       
       var tiles = [
-        { x: 0, y: 0, id: utils.getTileId("Red", 1, 1) }
+        { x: 0, y: 0, id: utils.getTileId("Red", 1, 0) }
       ];
             
       var result = board.testChanges({}, tiles);
@@ -87,10 +88,10 @@ describe('RummikubBoard', () => {
       var board = new RummikubBoard();
       
       var tiles = [
-        { x: 0, y: 0, value: 1, color: 'r' },
-        { x: 1, y: 0, value: 1, color: 'y' },
-        { x: 2, y: 0, value: 1, color: 'b' },
-        { x: 3, y: 0, value: 1, color: 'b' }
+        { x: 0, y: 0, id: utils.getTileId("Red", 1, 0) },
+        { x: 1, y: 0, id: utils.getTileId("Yellow", 1, 0) },
+        { x: 2, y: 0, id: utils.getTileId("Blue", 1, 0) },
+        { x: 3, y: 0, id: utils.getTileId("Blue", 1, 1) }
        ];
             
       var result = board.testChanges({}, tiles);
@@ -101,10 +102,10 @@ describe('RummikubBoard', () => {
       var board = new RummikubBoard();
       
       var tiles = [
-        { x: 0, y: 0, value: 1, color: 'r' },
-        { x: 1, y: 0, value: 2, color: 'r' },
-        { x: 2, y: 0, value: 4, color: 'r' },
-        { x: 3, y: 0, value: 5, color: 'r' }
+        { x: 0, y: 0, id: utils.getTileId("Red", 1, 0) },
+        { x: 1, y: 0, id: utils.getTileId("Red", 2, 0) },
+        { x: 2, y: 0, id: utils.getTileId("Red", 3, 0) },
+        { x: 3, y: 0, id: utils.getTileId("Red", 5, 0) }
        ];
             
       var result = board.testChanges({}, tiles);
@@ -115,9 +116,9 @@ describe('RummikubBoard', () => {
       var board = new RummikubBoard();
       
       var tiles = [
-        { x: 0, y: 0, value: 1, color: 'r' },
-        { x: 1, y: 0, value: 2, color: 'y' },
-        { x: 2, y: 0, value: 3, color: 'b' }
+        { x: 0, y: 0, id: utils.getTileId("Red", 1, 0) },
+        { x: 1, y: 0, id: utils.getTileId("Yellow", 2, 0) },
+        { x: 2, y: 0, id: utils.getTileId("Blue", 3, 0) }
        ];
             
       var result = board.testChanges({}, tiles);
